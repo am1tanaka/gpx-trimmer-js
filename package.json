@@ -1,0 +1,26 @@
+{
+  "name": "gpx-trimmer-js",
+  "version": "0.0.1",
+  "description": "gpx trimming module",
+  "main": "index.js",
+  "dependencies": {
+    "gulp-nodeunit": "^0.0.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/am1tanaka/gpx-trimmer-js.git"
+  },
+  "keywords": [
+    "gpx"
+  ],
+  "author": "YuTanaka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/am1tanaka/gpx-trimmer-js/issues"
+  },
+  "homepage": "https://github.com/am1tanaka/gpx-trimmer-js"
+}
