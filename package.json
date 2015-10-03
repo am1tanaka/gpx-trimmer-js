@@ -5,7 +5,6 @@
   "main": "index.js",
   "dependencies": {
     "gulp-nodeunit": "^0.0.5",
-    "xmldom": "^0.1.19"
   },
   "devDependencies": {
     "jquery": "^2.1.4"
