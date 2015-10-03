@@ -68,6 +68,16 @@ exports.range = {
     test.equal(gpxtrim.trim(data[0], null, dt2)+"\n", data[6], "before null.");
     test.equal(gpxtrim.trim(data[0], dt1, "")+"\n", data[7], "after empty.");
     test.done();
+  },
+  // 時間取得チェック
+  testGetTime: function(test) {
+    var dt1 = new Date('2013-08-05T03:31:13Z');
+    var dt2 = new Date('2013-08-05T03:31:50Z');
+    test.expect(2);
+    var ret = gpxtrim.getTime(data[0]);
+    test.equal(ret.first.toUTCString(), dt1.toUTCString(), "first time.");
+    test.equal(ret.last.toUTCString(), dt2.toUTCString(), "last time.");
+    test.done();
   }
 };
 

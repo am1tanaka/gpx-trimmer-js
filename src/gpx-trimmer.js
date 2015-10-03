@@ -125,6 +125,31 @@ exports.cut = function(gpx, vel) {
     return "<gpx></gpx>";
 };
 
+/**
+ * 時間を取得して、オブジェクトで返す
+ * @param string gpx GPXのUTF8文字列
+ * @return first=開始時間 / last=終了時間のDateオブジェクト
+ */
+exports.getTime = function(gpx) {
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(gpx, "application/xml");
+  var times = doc.getElementsByTagName('time');
+  var ret = {};
+  for (var i=0 ; i<times.length ; i++) {
+    if (times[i].parentNode.tagName !== "trkpt") {
+      continue;
+    }
+    // 最初のデータ
+    if (!ret.hasOwnProperty('first')) {
+      ret.first = new Date(times[i].firstChild);
+    }
+    else {
+      ret.last = new Date(times[i].firstChild);      
+    }
+  }
+  return ret;
+};
+
 /* 望まれる正確な形式のために関数を使用します...
 https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Date
 */
