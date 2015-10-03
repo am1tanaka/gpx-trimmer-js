@@ -27,6 +27,8 @@ data.push(fs.readFileSync('./sample/gpx02.gpx', 'utf8'));
 data.push(fs.readFileSync('./sample/gpx00_ans.gpx', 'utf8'));
 // 4
 data.push(fs.readFileSync('./sample/gpx01_ans.gpx', 'utf8'));
+// 5
+data.push(fs.readFileSync('./sample/gpx00_ans5.gpx', 'utf8'));
 
 /** 範囲のテスト*/
 exports.range = {
@@ -34,7 +36,7 @@ exports.range = {
   testTrim: function(test) {
     test.expect(1);
     var dt = gpxtrim.removeSegment(data[0]);
-    test.equal(gpxtrim.removeSegment(data[0])+"\n", data[3], "trimSegment ok.");
+    test.equal(gpxtrim.removeSegment(data[0])+"\n", data[3], "trimSegment");
     test.done();
   },
   // 前後2つをカット
@@ -42,7 +44,15 @@ exports.range = {
     var dt1 = new Date('2013-08-05T03:31:14Z');
     var dt2 = new Date('2013-08-05T03:31:49Z');
     test.expect(1);
-    test.equal(gpxtrim.trim(data[0], dt1, dt2)+"\n", data[4], "trimming ok.");
+    test.equal(gpxtrim.trim(data[0], dt1, dt2)+"\n", data[4], "trimming");
+    test.done();
+  },
+  // オーバー追加テスト
+  testAdd: function(test) {
+    var dt1 = new Date('2013-08-05T03:31:00Z');
+    var dt2 = new Date('2013-08-05T03:32:00Z');
+    test.expect(1);
+    test.equal(gpxtrim.trim(data[0], dt1, dt2)+"\n", data[5], "add out time");
     test.done();
   }
 };

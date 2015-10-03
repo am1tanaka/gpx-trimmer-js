@@ -33,30 +33,66 @@ exports.trim = function (gpx, start, end) {
   var parser = new DOMParser();
   var doc = parser.parseFromString(gpx, "application/xml");
   var times = doc.getElementsByTagName('time');
+  var isFirst = true;
+  var lasttrk = 0;
+  var clone;
 
   // データがなかったら何もせずに返す
-  if (times.length == 0) {
+  if (times.length === 0) {
     return exports.removeSegment(doc.toString());
   }
 
-  // 最初の1つめがstartより後ろだったら、最初にデータを追加する
-
   // データをトリミング
   for (var i=0 ; i<times.length ; i++) {
+    if (times[i].parentNode.tagName !== "trkpt") continue;
+
+    // 最初の1つめがstartより後ろだったら、最初にデータを追加する
+    if (  isFirst &&
+          (new Date(times[i].firstChild) > start)) {
+      clone = getCloneTrkpt(times[i], doc.createTextNode(ISODateString(start)));
+      times[i].parentNode.parentNode.insertBefore(clone, times[i].parentNode);
+      isFirst = false;
+      continue;
+    }
+    isFirst = false;
+
+    // 最後のデータ
+    lasttrk = i;
+
     // 時間より前か
     tm = new Date(times[i].firstChild);
-    if ((  (tm < start)
-      ||  (tm > end))
-      &&  (times[i].parentNode.tagName == "trkpt"))  {
+    if (  (tm < start) ||
+          (tm > end)) {
       // このデータを削除
       times[i].parentNode.parentNode.removeChild(times[i].parentNode);
     }
   }
 
   // 最後の時間がendより前だったら追加
+  if (tm < end) {
+    clone = getCloneTrkpt(times[lasttrk], doc.createTextNode(ISODateString(end)));
+    times[lasttrk].parentNode.parentNode.appendChild(clone, times[lasttrk].parentNode);
+  }
+
+  console.log("done:"+times.length);
 
   return exports.removeSegment(doc.toString());
 };
+
+/**
+ * 指定のtimeエレメントを含むtrkptエレメントを複製して、指定の時間に差し替える
+ * @param element elemtm 複製するDOMElement
+ * @param element time 差し替える時間をTextNodeに設定したエレメント
+ * @return element クローンして時間を差し替えたDOMElement
+ */
+function getCloneTrkpt(elemtm, time) {
+  var clone = elemtm.parentNode.cloneNode(true);
+  var clonetime = clone.getElementsByTagName('time')[0];
+  clonetime.removeChild(clonetime.firstChild);
+  clonetime.appendChild(time);
+  return clone;
+}
+
 
 /**
  * 指定の距離以内の点をまとめる。
@@ -79,3 +115,16 @@ exports.group = function(gpx, dist, leftLast, useEle) {
 exports.cut = function(gpx, vel) {
     return "<gpx></gpx>";
 };
+
+/* 望まれる正確な形式のために関数を使用します...
+https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Date
+*/
+function ISODateString(d){
+  function pad(n){return n<10 ? '0'+n : n;}
+  return d.getUTCFullYear()+'-' +
+    pad(d.getUTCMonth()+1)+'-' +
+    pad(d.getUTCDate())+'T' +
+    pad(d.getUTCHours())+':' +
+    pad(d.getUTCMinutes())+':' +
+    pad(d.getUTCSeconds())+'Z';
+}
