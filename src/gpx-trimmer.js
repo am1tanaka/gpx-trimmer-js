@@ -36,6 +36,16 @@ exports.trim = function (gpx, start, end) {
   var isFirst = true;
   var lasttrk = 0;
   var clone;
+  var noStart = false;
+  var noEnd = false;
+
+  // データのチェック
+  if (!(start instanceof Date)) {
+    noStart = true;
+  }
+  if (!(end instanceof Date)) {
+    noEnd = true;
+  }
 
   // データがなかったら何もせずに返す
   if (times.length === 0) {
@@ -48,6 +58,7 @@ exports.trim = function (gpx, start, end) {
 
     // 最初の1つめがstartより後ろだったら、最初にデータを追加する
     if (  isFirst &&
+          !noStart &&
           (new Date(times[i].firstChild) > start)) {
       clone = getCloneTrkpt(times[i], doc.createTextNode(ISODateString(start)));
       times[i].parentNode.parentNode.insertBefore(clone, times[i].parentNode);
@@ -61,20 +72,18 @@ exports.trim = function (gpx, start, end) {
 
     // 時間より前か
     tm = new Date(times[i].firstChild);
-    if (  (tm < start) ||
-          (tm > end)) {
+    if (  ((tm < start) && !noStart) ||
+          ((tm > end) && !noEnd)) {
       // このデータを削除
       times[i].parentNode.parentNode.removeChild(times[i].parentNode);
     }
   }
 
   // 最後の時間がendより前だったら追加
-  if (tm < end) {
+  if ((tm < end) && (!noEnd)) {
     clone = getCloneTrkpt(times[lasttrk], doc.createTextNode(ISODateString(end)));
     times[lasttrk].parentNode.parentNode.appendChild(clone, times[lasttrk].parentNode);
   }
-
-  console.log("done:"+times.length);
 
   return exports.removeSegment(doc.toString());
 };

@@ -29,6 +29,10 @@ data.push(fs.readFileSync('./sample/gpx00_ans.gpx', 'utf8'));
 data.push(fs.readFileSync('./sample/gpx01_ans.gpx', 'utf8'));
 // 5
 data.push(fs.readFileSync('./sample/gpx00_ans5.gpx', 'utf8'));
+// 6
+data.push(fs.readFileSync('./sample/gpx00_ans6.gpx', 'utf8'));
+// 7
+data.push(fs.readFileSync('./sample/gpx00_ans7.gpx', 'utf8'));
 
 /** 範囲のテスト*/
 exports.range = {
@@ -53,6 +57,16 @@ exports.range = {
     var dt2 = new Date('2013-08-05T03:32:00Z');
     test.expect(1);
     test.equal(gpxtrim.trim(data[0], dt1, dt2)+"\n", data[5], "add out time");
+    test.done();
+  },
+  // nullテスト
+  testNull: function(test) {
+    test.expect(2);
+    var dt1 = new Date('2013-08-05T03:31:14Z');
+    var dt2 = new Date('2013-08-05T03:31:49Z');
+    test.expect(2);
+    test.equal(gpxtrim.trim(data[0], null, dt2)+"\n", data[6], "before null.");
+    test.equal(gpxtrim.trim(data[0], dt1, "")+"\n", data[7], "after empty.");
     test.done();
   }
 };
