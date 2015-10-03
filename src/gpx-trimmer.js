@@ -1,8 +1,7 @@
 /**
  * GPXの整理を行うライブラリ
  */
-
-$ = require('jquery');
+var DOMParser = require('xmldom').DOMParser;
 
 /**
  * trksegタグを削除
@@ -12,12 +11,11 @@ $ = require('jquery');
 exports.removeSegment = function (gpx) {
   // 改行を削除
   var rep = gpx
-    .replace(/\r/g, "")
-    .replace(/\n/g, "")
-    .replace(/<trkseg>/gi,"")
-    .replace(/<\/trkseg>/gi,"")
+    .replace(/\r|\n|<trkseg>|<\/trkseg>/gi, "")
     .replace(/ *</g,"<")
-    .replace(/> */g,">");
+    .replace(/> */g,">")
+    .replace(/ *\?>/g,"?>")
+    .replace(/\t/i," ");
   // タグを削除
   return rep;
 };
@@ -30,8 +28,34 @@ exports.removeSegment = function (gpx) {
  * @return string UTF8でGPX文字列を返す。改行は削除
  */
 exports.trim = function (gpx, start, end) {
-  var trimseg = exports.removeSegment(gpx);
-  return trimseg;
+  var tm;
+  var parent;
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(gpx, "application/xml");
+  var times = doc.getElementsByTagName('time');
+
+  // データがなかったら何もせずに返す
+  if (times.length == 0) {
+    return exports.removeSegment(doc.toString());
+  }
+
+  // 最初の1つめがstartより後ろだったら、最初にデータを追加する
+
+  // データをトリミング
+  for (var i=0 ; i<times.length ; i++) {
+    // 時間より前か
+    tm = new Date(times[i].firstChild);
+    if ((  (tm < start)
+      ||  (tm > end))
+      &&  (times[i].parentNode.tagName == "trkpt"))  {
+      // このデータを削除
+      times[i].parentNode.parentNode.removeChild(times[i].parentNode);
+    }
+  }
+
+  // 最後の時間がendより前だったら追加
+
+  return exports.removeSegment(doc.toString());
 };
 
 /**

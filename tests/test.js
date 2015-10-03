@@ -3,7 +3,6 @@
  * nodeunit tests/test.js で実行
  */
 var fs = require('fs');
-var $ = require('jquery');
 var gpxtrim = require('../src/gpx-trimmer');
 
 /*　データ読み込み
@@ -43,7 +42,7 @@ exports.range = {
     var dt1 = new Date('2013-08-05T03:31:14Z');
     var dt2 = new Date('2013-08-05T03:31:49Z');
     test.expect(1);
-    test.equal(gpxtrim.trim(data[0], dt1, dt2), data[4], "trimming ok.");
+    test.equal(gpxtrim.trim(data[0], dt1, dt2)+"\n", data[4], "trimming ok.");
     test.done();
   }
 };
