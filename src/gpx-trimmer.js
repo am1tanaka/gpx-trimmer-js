@@ -4,6 +4,15 @@
 var DOMParser = require('xmldom').DOMParser;
 
 /**
+ * 前回の処理結果を記録
+ */
+var lastResult = "";
+
+exports.getResult = function() {
+  return lastResult;
+};
+
+/**
  * trksegタグを削除
  * @param string gpx GPX文字列
  * @return string タグを削除した後のGPXを文字列で返す。
@@ -39,6 +48,9 @@ exports.trim = function (gpx, start, end) {
   var noStart = false;
   var noEnd = false;
 
+  // 処理内容をリセット
+  lastResult = "";
+
   // データのチェック
   if (!(start instanceof Date)) {
     noStart = true;
@@ -63,6 +75,7 @@ exports.trim = function (gpx, start, end) {
       clone = getCloneTrkpt(times[i], doc.createTextNode(ISODateString(start)));
       times[i].parentNode.parentNode.insertBefore(clone, times[i].parentNode);
       isFirst = false;
+      lastResult += "Add Start Data:"+start+"\n";
       continue;
     }
     isFirst = false;
@@ -76,6 +89,8 @@ exports.trim = function (gpx, start, end) {
           ((tm > end) && !noEnd)) {
       // このデータを削除
       times[i].parentNode.parentNode.removeChild(times[i].parentNode);
+      //
+      lastResult += "Remove Data:"+tm+"\n";
     }
   }
 
@@ -83,6 +98,7 @@ exports.trim = function (gpx, start, end) {
   if ((tm < end) && (!noEnd)) {
     clone = getCloneTrkpt(times[lasttrk], doc.createTextNode(ISODateString(end)));
     times[lasttrk].parentNode.parentNode.appendChild(clone, times[lasttrk].parentNode);
+    lastResult += "Add End Data:"+end+"\n";
   }
 
   return exports.removeSegment(doc.toString());
@@ -144,7 +160,7 @@ exports.getTime = function(gpx) {
       ret.first = new Date(times[i].firstChild);
     }
     else {
-      ret.last = new Date(times[i].firstChild);      
+      ret.last = new Date(times[i].firstChild);
     }
   }
   return ret;

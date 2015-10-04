@@ -1,4 +1,5 @@
 .env
+*.log
 **/.DS_Store
 jquery.min.js
 node_modules

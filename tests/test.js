@@ -17,22 +17,14 @@ var gpxtrim = require('../src/gpx-trimmer');
         セグメント2：中央に1つ異常値 x6
 */
 var data = [];
-// 0
-data.push(fs.readFileSync('./sample/gpx00.gpx', 'utf8'));
-// 1
-data.push(fs.readFileSync('./sample/gpx01.gpx', 'utf8'));
-// 2
-data.push(fs.readFileSync('./sample/gpx02.gpx', 'utf8'));
-// 3
-data.push(fs.readFileSync('./sample/gpx00_ans.gpx', 'utf8'));
-// 4
-data.push(fs.readFileSync('./sample/gpx01_ans.gpx', 'utf8'));
-// 5
-data.push(fs.readFileSync('./sample/gpx00_ans5.gpx', 'utf8'));
-// 6
-data.push(fs.readFileSync('./sample/gpx00_ans6.gpx', 'utf8'));
-// 7
-data.push(fs.readFileSync('./sample/gpx00_ans7.gpx', 'utf8'));
+data.push(fs.readFileSync('./sample/gpx00.gpx', 'utf8'));// 0
+data.push(fs.readFileSync('./sample/gpx01.gpx', 'utf8'));// 1
+data.push(fs.readFileSync('./sample/gpx02.gpx', 'utf8'));// 2
+data.push(fs.readFileSync('./sample/gpx00_ans.gpx', 'utf8'));// 3
+data.push(fs.readFileSync('./sample/gpx01_ans.gpx', 'utf8'));// 4
+data.push(fs.readFileSync('./sample/gpx00_ans5.gpx', 'utf8'));// 5
+data.push(fs.readFileSync('./sample/gpx00_ans6.gpx', 'utf8'));// 6
+data.push(fs.readFileSync('./sample/gpx00_ans7.gpx', 'utf8'));// 7
 
 /** 範囲のテスト*/
 exports.range = {
@@ -50,6 +42,7 @@ exports.range = {
     test.expect(1);
     test.equal(gpxtrim.trim(data[0], dt1, dt2)+"\n", data[4], "trimming");
     test.done();
+    console.log("testZengo:"+gpxtrim.getResult());
   },
   // オーバー追加テスト
   testAdd: function(test) {
@@ -58,6 +51,7 @@ exports.range = {
     test.expect(1);
     test.equal(gpxtrim.trim(data[0], dt1, dt2)+"\n", data[5], "add out time");
     test.done();
+    console.log("testAdd:"+gpxtrim.getResult());
   },
   // nullテスト
   testNull: function(test) {
@@ -66,7 +60,9 @@ exports.range = {
     var dt2 = new Date('2013-08-05T03:31:49Z');
     test.expect(2);
     test.equal(gpxtrim.trim(data[0], null, dt2)+"\n", data[6], "before null.");
+    console.log("testNull.Remove Last:"+gpxtrim.getResult());
     test.equal(gpxtrim.trim(data[0], dt1, "")+"\n", data[7], "after empty.");
+    console.log("testNull.Remove First:"+gpxtrim.getResult());
     test.done();
   },
   // 時間取得チェック
