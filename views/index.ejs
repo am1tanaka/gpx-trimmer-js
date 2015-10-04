@@ -20,10 +20,10 @@
       <h1><%= title %></h1>
       <p>Welcome to <%= title %></p>
 
-      <form action="post" enctype="application/x-www-form-urlencoded">
+      <form action="post" enctype="multipart/form-data">
         <div class='form-group'>
           <label for='fileGpx'>GPXファイル</label>
-          <input type="file" id="fileGpx"/>
+          <input type="file" id="fileGpx" name="fileGpx" accept=".gpx"/>
           <div id="gpxstatus"></div>
         </div>
         <hr />
@@ -43,12 +43,12 @@
       </form>
       <hr />
       <div class="copyright">2015 YuTanaka / <a href='https://github.com/am1tanaka/gpx-trimmer-js/blob/master/LICENSE'>MIT License</a></div>
-
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/libgpx.js"></script>
   </body>
 </html>

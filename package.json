@@ -17,6 +17,9 @@
   },
   "devDependencies": {
     "bootstrap": "^3.3.5",
+    "browserify": "^11.2.0",
+    "gulp": "^3.9.0",
+    "gulp-browserify": "^0.5.1",
     "jquery": "^2.1.4"
   },
   "scripts": {
