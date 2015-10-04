@@ -18,7 +18,6 @@
   <body>
     <div class='container'>
       <h1><%= title %></h1>
-      <p>Welcome to <%= title %></p>
 
       <form action="post" enctype="multipart/form-data">
         <div class='form-group'>
@@ -29,18 +28,20 @@
         <hr />
         <div class="form-group">
           <label for="textStart">開始時間</label>
-          <input type="text" id="textStart" placeholder="2015-10-1 9:00:00" class='form-control'/>
+          <input type="text" id="textStart" placeholder="2015/10/1 9:00:00" class='form-control'/>
           <div class="help-block">ここで設定した時間より前のログを削除します。省略すると最初のデータから利用します。
           <br/>ログにある時間より前の時間を設定すると、最初のデータをコピーして、指定した時間のログを追加します。</div>
         </div>
         <div class="form-group">
           <label for="textEnd">終了時間</label>
-          <input type="text" id="textEnd" placeholder="2015-10-1 17:00:00" class='form-control'/>
+          <input type="text" id="textEnd" placeholder="2015/10/1 17:00:00" class='form-control'/>
           <div class="help-block">ここで設定した時間より後ろのログを削除します。省略すると最後までデータを利用します。
           <br/>ログにある時間より後ろの時間を設定すると、最後のデータをコピーして、指定した時間のログを追加します。</div>
         </div>
         <submit class='btn btn-primary'>GPX変換</submit>
       </form>
+      <a id="btnDownload"></a>
+      <div id='resultst'></div>
       <hr />
       <div class="copyright">2015 YuTanaka / <a href='https://github.com/am1tanaka/gpx-trimmer-js/blob/master/LICENSE'>MIT License</a></div>
     </div>
@@ -50,5 +51,6 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/libgpx.js"></script>
+
   </body>
 </html>

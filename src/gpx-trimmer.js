@@ -6,10 +6,10 @@ var DOMParser = require('xmldom').DOMParser;
 /**
  * 前回の処理結果を記録
  */
-var lastResult = "";
+var lastStatus = "";
 
-exports.getResult = function() {
-  return lastResult;
+exports.getStatus = function() {
+  return lastStatus;
 };
 
 /**
@@ -49,7 +49,7 @@ exports.trim = function (gpx, start, end) {
   var noEnd = false;
 
   // 処理内容をリセット
-  lastResult = "";
+  lastStatus = "";
 
   // データのチェック
   if (!(start instanceof Date)) {
@@ -75,7 +75,7 @@ exports.trim = function (gpx, start, end) {
       clone = getCloneTrkpt(times[i], doc.createTextNode(ISODateString(start)));
       times[i].parentNode.parentNode.insertBefore(clone, times[i].parentNode);
       isFirst = false;
-      lastResult += "Add Start Data:"+start+"\n";
+      lastStatus += "Add Start Data:"+start+"\n";
       continue;
     }
     isFirst = false;
@@ -89,8 +89,9 @@ exports.trim = function (gpx, start, end) {
           ((tm > end) && !noEnd)) {
       // このデータを削除
       times[i].parentNode.parentNode.removeChild(times[i].parentNode);
+      i--;
       //
-      lastResult += "Remove Data:"+tm+"\n";
+      lastStatus += "Remove Data:"+tm+"\n";
     }
   }
 
@@ -98,7 +99,7 @@ exports.trim = function (gpx, start, end) {
   if ((tm < end) && (!noEnd)) {
     clone = getCloneTrkpt(times[lasttrk], doc.createTextNode(ISODateString(end)));
     times[lasttrk].parentNode.parentNode.appendChild(clone, times[lasttrk].parentNode);
-    lastResult += "Add End Data:"+end+"\n";
+    lastStatus += "Add End Data:"+end+"\n";
   }
 
   return exports.removeSegment(doc.toString());

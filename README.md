@@ -29,3 +29,7 @@ GPXをトリミングするためのJSモジュール。
 ## 公開時
 - nodejs+express+ejsで作成
 - クライアントはBootstrap
+
+＃参考URL
+- Try Lifelog 内部データをファイルとしてダウンロードできるようにする http://lifelog.main.jp/wordpress/?p=621
+    - 変更したGPXファイルをダウンロードさせる方法
