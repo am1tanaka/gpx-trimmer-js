@@ -26,6 +26,18 @@ data.push(fs.readFileSync('./sample/gpx00_ans5.gpx', 'utf8'));// 5
 data.push(fs.readFileSync('./sample/gpx00_ans6.gpx', 'utf8'));// 6
 data.push(fs.readFileSync('./sample/gpx00_ans7.gpx', 'utf8'));// 7
 
+/** GPXかどうかのチェック*/
+exports.testGpx = {
+  // XMLになっていない
+  testNotXML: function(test) {
+    test.expect(3);
+    test.ok(!gpxtrim.validGPX("not xml"), "test Not XML");
+    test.ok(!gpxtrim.validGPX('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'), "test Not GPX");
+    test.ok(gpxtrim.validGPX(data[0]), "test Valid GPX");
+    test.done();
+  }
+}
+
 /** 範囲のテスト*/
 exports.range = {
   // トリミングテスト
