@@ -42,7 +42,7 @@ exports.range = {
     test.expect(1);
     test.equal(gpxtrim.trim(data[0], dt1, dt2)+"\n", data[4], "trimming");
     test.done();
-    console.log("testZengo:"+gpxtrim.getResult());
+    console.log("testZengo:"+gpxtrim.getStatus());
   },
   // オーバー追加テスト
   testAdd: function(test) {
@@ -51,7 +51,7 @@ exports.range = {
     test.expect(1);
     test.equal(gpxtrim.trim(data[0], dt1, dt2)+"\n", data[5], "add out time");
     test.done();
-    console.log("testAdd:"+gpxtrim.getResult());
+    console.log("testAdd:"+gpxtrim.getStatus());
   },
   // nullテスト
   testNull: function(test) {
@@ -60,9 +60,9 @@ exports.range = {
     var dt2 = new Date('2013-08-05T03:31:49Z');
     test.expect(2);
     test.equal(gpxtrim.trim(data[0], null, dt2)+"\n", data[6], "before null.");
-    console.log("testNull.Remove Last:"+gpxtrim.getResult());
+    console.log("testNull.Remove Last:"+gpxtrim.getStatus());
     test.equal(gpxtrim.trim(data[0], dt1, "")+"\n", data[7], "after empty.");
-    console.log("testNull.Remove First:"+gpxtrim.getResult());
+    console.log("testNull.Remove First:"+gpxtrim.getStatus());
     test.done();
   },
   // 時間取得チェック

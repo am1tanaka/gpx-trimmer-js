@@ -18,15 +18,28 @@ exports.getStatus = function() {
  * @return string タグを削除した後のGPXを文字列で返す。
  */
 exports.removeSegment = function (gpx) {
-  // 改行を削除
-  var rep = gpx
-    .replace(/\r|\n|<trkseg>|<\/trkseg>/gi, "")
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(gpx, "application/xml");
+  var segs = doc.getElementsByTagName('trkseg');
+  var clone = "";
+  var segchilds = "";
+
+  // 不要なtrksegを削除
+  for (var i=1 ; i<segs.length ; ) {
+    for (var j=0 ; j<segs[1].childNodes.length ; j++) {
+      segs[0].appendChild(segs[1].childNodes[j].cloneNode(true));
+    }
+    // コピーしたセグメントを削除
+    segs[1].parentNode.removeChild(segs[1]);
+  }
+
+  // 不要な項目を削除
+  return doc.toString()
+    .replace(/\r|\n/gi, "")
     .replace(/ *</g,"<")
     .replace(/> */g,">")
     .replace(/ *\?>/g,"?>")
     .replace(/\t/i," ");
-  // タグを削除
-  return rep;
 };
 
 /**
