@@ -23,12 +23,15 @@
   </head>
   <body>
     <div class='container'>
-      <h1>GPX Trimmer js(2015/11/24)</h1>
+      <h1>GPX Trimmer js</h1>
+      <div class='help-block'>Ver20151124.1</div>
 
       <form action="post" enctype="multipart/form-data">
         <div class='form-group'>
-          <label for='fileGpx'>GPXファイル</label>
-          <input type="file" id="fileGpx" name="fileGpx" accept=".gpx"/>
+          <label for='phFile'>GPXファイル</label>
+          <div id="phFile">
+            <input type="file" id="fileGpx" name="fileGpx" accept=".gpx"/>
+          </div>
           <div id="gpxstatus" class="help-block"></div>
         </div>
         <hr />

@@ -12,17 +12,32 @@ exports.getStatus = function() {
   return lastStatus;
 };
 
+/** 指定の文字列がGPXとして解釈できるかを確認する
+ * @param string gpx 読み込んだGPX文字列
+ * @return true=問題なし / false=エラー。getStatus()で結果を読み取れる
+ */
+exports.validGPX = function(gpx) {
+  var doc = new DOMParser().parseFromString(gpx, "application/xml");
+  return (doc.getElementsByTagName('gpx').length > 0);
+}
+
 /**
  * trksegタグを削除
  * @param string gpx GPX文字列
- * @return string タグを削除した後のGPXを文字列で返す。
+ * @return string タグを削除した後のGPXを文字列で返す。失敗時はfalseを返す
  */
 exports.removeSegment = function (gpx) {
   var parser = new DOMParser();
-  var doc = parser.parseFromString(gpx, "application/xml");
-  var segs = doc.getElementsByTagName('trkseg');
+  var segs;
   var clone = "";
   var segchilds = "";
+  var doc = parser.parseFromString(gpx, "application/xml");
+  segs = doc.getElementsByTagName('trkseg');
+
+  // チェック
+  if (!exports.validGPX(gpx)) {
+    return false;
+  }
 
   // 不要なtrksegを削除
   for (var i=1 ; i<segs.length ; ) {
@@ -47,7 +62,7 @@ exports.removeSegment = function (gpx) {
  * @param string gpx GPX文字列
  * @param Date start 開始時間
  * @param Date end 終了時間
- * @return string UTF8でGPX文字列を返す。改行は削除
+ * @return string UTF8でGPX文字列を返す。改行は削除。失敗時はfalseを返す
  */
 exports.trim = function (gpx, start, end) {
   var tm;
@@ -60,6 +75,11 @@ exports.trim = function (gpx, start, end) {
   var clone;
   var noStart = false;
   var noEnd = false;
+
+  // チェック
+  if (!exports.validGPX(gpx)) {
+    return false;
+  }
 
   // 処理内容をリセット
   lastStatus = "";
@@ -139,9 +159,14 @@ function getCloneTrkpt(elemtm, time) {
  * @param number dist 距離をメートル単位で指定。この距離以内の点をまとめる
  * @param bool leftLast true=最初と最後の点を残す / false=最初の点のみ残す。初期値はtrue
  * @param bool useEle true=高度データを利用 / false=標高を無視 / 初期値はtrue
- * @return string UTF8でGPX文字列を返す。改行は削除
+ * @return string UTF8でGPX文字列を返す。改行は削除。失敗時はfalseを返す
  */
 exports.group = function(gpx, dist, leftLast, useEle) {
+  // チェック
+  if (!exports.validGPX(gpx)) {
+    return false;
+  }
+
   return "<gpx></gpx>";
 };
 
@@ -149,22 +174,33 @@ exports.group = function(gpx, dist, leftLast, useEle) {
  * 異常値の削除。指定の秒速よりも速い移動で1つだけはみ出す点があったら削除する
  * @param string gpx GPX文字列
  * @param number vel 異常値を秒速で指定
- * @return string UTF8でGPX文字列を返す。改行は削除
+ * @return string UTF8でGPX文字列を返す。改行は削除。失敗時はfalseを返す
  */
 exports.cut = function(gpx, vel) {
-    return "<gpx></gpx>";
+  // チェック
+  if (!exports.validGPX(gpx)) {
+    return false;
+  }
+
+  return "<gpx></gpx>";
 };
 
 /**
  * 時間を取得して、オブジェクトで返す
  * @param string gpx GPXのUTF8文字列
- * @return first=開始時間 / last=終了時間のDateオブジェクト
+ * @return first=開始時間 / last=終了時間のDateオブジェクト。失敗時はfalseを返す
  */
 exports.getTime = function(gpx) {
   var parser = new DOMParser();
   var doc = parser.parseFromString(gpx, "application/xml");
   var times = doc.getElementsByTagName('time');
   var ret = {};
+
+  // チェック
+  if (!exports.validGPX(gpx)) {
+    return false;
+  }
+
   for (var i=0 ; i<times.length ; i++) {
     if (times[i].parentNode.tagName !== "trkpt") {
       continue;

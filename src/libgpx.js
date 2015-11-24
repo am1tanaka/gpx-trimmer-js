@@ -79,15 +79,10 @@ function downloadGPX(result){
 function changeFile() {
   // 機能チェック
   if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
+    // 初期化
+    clearFile();
     alert('The File APIs are not fully supported in this browser.');
   }
-
-  // 初期化
-  strGPX = "";
-  fileGPX = "";
-  rangeGPX = {};
-  $('#btnDownload').text("");
-  $('#resultst').text("");
 
   // ファイル取得
   fileGPX = $(this).prop('files')[0];
@@ -95,12 +90,33 @@ function changeFile() {
   reader.onload = (function(fdata) {
     return function(e) {
       strGPX = e.target.result;
+      if (!gpxtrim.validGPX(strGPX)) {
+        clearFile();
+        alert("指定したファイルがGPXファイルとして認識できませんでした。UTF-8NのGPXファイルを指定してください。");
+        return;
+      }
       detectGPX(strGPX);
     };
   })(fileGPX);
 
   // 読み込み開始
   reader.readAsText(fileGPX);
+}
+
+/** 読み込んだファイルを解放する*/
+function clearFile() {
+  strGPX = "";
+  fileGPX = "";
+  rangeGPX = {};
+  $('#btnDownload').text("");
+  $('#resultst').text("");
+  $('#gpxstatus').text("");
+  $('#textStart').val("");
+  $('#textEnd').val("");
+  // ファイルをリセット
+  $('#fileGpx').unbind();
+  $('#phFile').html($('#phFile').html());
+  $('#fileGpx').change(changeFile);
 }
 
 /** GPXファイルの開始と終了時間を読み取って、ページに反映させる*/
