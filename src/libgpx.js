@@ -53,6 +53,13 @@ function submitGpx() {
   result = gpxtrim.trim(strGPX, new Date(dtst), new Date(dted));
   // 結果表示
   $('#resultst').html(gpxtrim.getStatus().replace(/\n/g, "<br/>"));
+
+  // 開始時間と終了時間を追加する場合
+  if ($('#checkAddStartEnd').prop('checked')) {
+    result = gpxtrim.trim(result, new Date(dtst), new Date(dted));
+    // 結果表示
+    $('#resultst').html($('#resultst').html()+"<br/>"+gpxtrim.getStatus().replace(/\n/g, "<br/>"));
+  }
   // ダウンロード
   downloadGPX(result);
 }
