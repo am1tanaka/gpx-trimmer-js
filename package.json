@@ -20,7 +20,7 @@
     "gulp": "^3.9.0",
     "gulp-browserify": "^0.5.1",
     "gulp-nodeunit": "^0.0.5",
-    "jquery": "^2.1.4"
+    "jquery": "~>3.0.0"
   },
   "scripts": {
     "test": "nodeunit tests/test.js",
